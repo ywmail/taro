@@ -59,6 +59,7 @@ interface VideoProps extends StandardProps {
 
   /** 在非全屏模式下，是否开启亮度与音量调节手势
    * @default false
+   * @supported weapp, swan, qq
    */
   pageGesture?: boolean
 
@@ -228,8 +229,9 @@ interface VideoProps extends StandardProps {
 
   /** 是否展示底部进度条
    * @supported weapp
+   * @default true
    */
-  showBottomProgress?: string
+  showBottomProgress?: boolean
 
   /** 是否在小窗模式下显示播放进度
    * @supported weapp
@@ -244,7 +246,7 @@ interface VideoProps extends StandardProps {
   /** 是否是 DRM 视频源
    * @supported weapp
    */
-  isDrm?: string
+  isDrm?: boolean
 
   /** DRM 设备身份认证 url，仅 is-drm 为 true 时生效 (Android)
    * @supported weapp
@@ -280,7 +282,7 @@ interface VideoProps extends StandardProps {
    *
    * @supported alipay, jd
    */
-  mobilenetHintType?: string
+  mobilenetHintType?: number
 
   /** 浮窗设置。暂时不支持全局浮窗。
    * 可选值：
@@ -566,6 +568,16 @@ declare namespace VideoProps {
 
     /** 持续时间 */
     duration: number
+
+    /** 用户实际观看时长
+     * @supported alipay
+     */
+    userPlayDuration: number
+
+    /** 视频总时长
+     * @supported alipay
+     */
+    videoDuration: number
   }
   interface onFullscreenChangeEventDetail {
     /** 方向 */
@@ -636,10 +648,8 @@ declare namespace VideoProps {
 }
 
 /** 视频。相关api：Taro.createVideoContext
- *
- * 备注：h5上因为没有测试，所以暂时写了“待定”，需要`Video`来确认。
  * @classification media
- * @supported weapp, h5, swan, alipay, tt
+ * @supported weapp, alipay, swan, tt, qq, jd, h5, rn, harmony, harmony_hybrid
  * @example_react
  * ```tsx
  * export default class PageView extends Component {

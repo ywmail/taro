@@ -38,7 +38,7 @@ interface ViewProps extends StandardProps {
    * @supported alipay
    * @default false
    */
-  disableScroll?: string
+  disableScroll?: boolean
 
   /** 是否隐藏。
    * @supported alipay
@@ -66,12 +66,6 @@ interface ViewProps extends StandardProps {
    * @supported qq
    */
   ariaLabel?: string
-
-  /** 是否以 catch 的形式绑定 touchmove 事件
-   * @supported weapp, alipay, swan, tt, qq, jd
-   * @version 3.1.0+
-   */
-  catchMove?: boolean
 
   /** 点击。
    * @supported alipay
@@ -141,7 +135,7 @@ interface ViewProps extends StandardProps {
 
 /** 视图容器
  * @classification viewContainer
- * @supported weapp, swan, alipay, tt, h5, rn
+ * @supported weapp, alipay, swan, tt, qq, jd, h5, rn, harmony, harmony_hybrid
  * @example_react
  * ```tsx
  * export default class PageView extends Component {

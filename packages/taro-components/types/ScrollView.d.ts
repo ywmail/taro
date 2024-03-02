@@ -1,5 +1,5 @@
 import { ComponentType } from 'react'
-import { StandardProps, CommonEventFunction, BaseEventOrigFunction } from './common'
+import { BaseEventOrigFunction, CommonEventFunction, StandardProps } from './common'
 interface ScrollViewProps extends StandardProps {
   /** 允许横向滚动
    * @default false
@@ -156,7 +156,17 @@ interface ScrollViewProps extends StandardProps {
    * @supported weapp
    * @default false
    */
-  enablePassive?: string
+  enablePassive?: boolean
+
+  /** 指定 scroll-into-view 目标节点在视口内的位置。
+   * start - 目标节点显示在视口开始处
+   * center - 目标节点显示在视口中间
+   * end - 目标节点显示在视口结束处
+   * nearest - 目标节点在就近的视口边缘显示，若节点已在视口内则不触发滚动
+   * @supported h5
+   * @default 'start'
+   */
+  scrollIntoViewAlignment?: 'start' | 'center' | 'end' | 'nearest'
 
   /** 滚动到顶部/左边，会触发 scrolltoupper 事件
    * @supported weapp, alipay, swan, tt, qq, jd, h5, rn
@@ -243,6 +253,7 @@ declare namespace ScrollViewProps {
     scrollWidth: number
     deltaX: number
     deltaY: number
+    isDrag?: boolean
   }
   interface onDragDetail {
     /** 横向滚动条位置 */
@@ -254,6 +265,30 @@ declare namespace ScrollViewProps {
     /** 滚动速度 */
     velocity: number
   }
+  interface RefresherStatusChange {
+    status: RefreshStatus
+    dy: number
+  }
+  const enum RefreshStatus {
+    // 空闲
+    Idle,
+    // 超过下拉刷新阈值，同 bind:refresherwillRefresh 触发时机
+    CanRefresh,
+    // 下拉刷新，同 bind:refresherrefresh 触发时机
+    Refreshing,
+    // 下拉刷新完成，同 bind:refresherrestore 触发时机
+    Completed,
+    // 下拉刷新失败
+    Failed,
+    // 超过下拉二级阈值
+    CanTwoLevel,
+    // 开始打开二级
+    TwoLevelOpening,
+    // 打开二级
+    TwoLeveling,
+    // 开始关闭二级
+    TwoLevelClosing,
+  }
 }
 
 /** 可滚动视图区域。使用竖向滚动时，需要给scroll-view一个固定高度，通过 WXSS 设置 height。组件属性的长度单位默认为 px
@@ -262,7 +297,7 @@ declare namespace ScrollViewProps {
  * H5 中 ScrollView 组件是通过一个高度（或宽度）固定的容器内部滚动来实现的，因此务必正确的设置容器的高度。例如: 如果 ScrollView 的高度将 body 撑开，就会同时存在两个滚动条（body 下的滚动条，以及 ScrollView 的滚动条）。
  * 微信小程序 中 ScrollView 组件如果设置 scrollX 横向滚动时，并且子元素为多个时（单个子元素时设置固定宽度则可以正常横向滚动），需要通过 WXSS 设置 `white-space: nowrap` 来保证元素不换行，并对 ScrollView 内部元素设置 `display: inline-block` 来使其能够横向滚动。
  * @classification viewContainer
- * @supported weapp, swan, alipay, tt, h5, rn
+ * @supported weapp, alipay, swan, tt, qq, jd, h5, rn, harmony, harmony_hybrid
  * @example_react
  * ```tsx
  * export default class PageView extends Component {
